@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-pages = ['page1', 'index']
+pages = ['page1', 'index','page2', 'page3', 'page4', 'page5', 'page6', 'page7']
 results = {}
 
 """
