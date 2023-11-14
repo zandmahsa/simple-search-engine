@@ -1,64 +1,55 @@
 import requests
 from bs4 import BeautifulSoup
-import re
 
+def crawl(url, base_url, visited, index):
+    """
+    Recursively crawls a web page and updates the visited set and index.
+    """
+    if url in visited or not url.startswith(base_url):
+        return
 
+    try:
+        response = requests.get(url)
+        visited.add(url)
 
+        # Skip if page not found or not HTML
+        if response.status_code == 404 or 'text/html' not in response.headers.get('Content-Type', ''):
+            return
 
-#pages = ['page1', 'index', 'page2', 'page3', 'page4', 'page5', 'page6', 'page7', 'https://www.uni-osnabrueck.de/startseite/']
+        soup = BeautifulSoup(response.text, 'html.parser')
+        text = soup.get_text()
+        words = text.split()
+        for word in words:
+            index.setdefault(word, set()).add(url)
 
-def soup_page(url):
-    res = requests.get(url)
-    if res.status_code == 200:
-        soup = BeautifulSoup(res.text, 'html.parser')
-        return soup
-    else:
-        return None
+        for link in soup.find_all('a', href=True):
+            full_link = base_url + link['href'].lstrip('/')
+            crawl(full_link, base_url, visited, index)
+
+    except requests.RequestException:
+        pass
+
+def search(query, index):
+    """
+    Search for pages containing all words in the query.
+    """
+    words = query.split()
+    if not words:
+        return []
+
+    results = index.get(words[0], set())
+    for word in words[1:]:
+        results = results.intersection(index.get(word, set()))
+
+    return list(results)
+
     
-def index(soup):
-    index_dict = {}
-    words = re.findall(r'\w+', soup.get_text())
-    for word in words:
-        word = word.lower()
-        if word in index_dict:
-            index_dict[word] += 1
-        else:
-            index_dict[word] = 1
-    return index_dict
+# Base URL of the site to crawl
+base_url = 'https://vm009.rz.uos.de/crawl/'
+visited_urls = set()
+index = {}
 
-def remove_words(input1):
-    stop_words = {'a', 'an', 'the', 'and', 'or', 'in', 'on', 'at'}
-    for stop_word in stop_words:
-        if stop_word in input1:
-            del input1[stop_word]
-    return input1
+crawl(base_url, base_url, visited_urls, index)
 
-def search(query, input1):
-    input_query = re.findall(r'\w+', query.lower())
-    results = {}
-    for word in input_query:
-        if word in input1:
-            results[word] = input1[word]
-    return results
+print(search("platypus", index))
 
-def web_search(url, query):
-    soup = soup_page(url)
-    if soup is None:
-        return "404"
-    input1 = index(soup)
-    input1 = remove_words(input1)
-    results = search(query, input1)
-    return results
-
-
-'''for i in range(0, (len(pages))):
-    if i < (len(pages)-1):
-        url = 'https://vm009.rz.uos.de/crawl/{pages[i]}.html'
-    else:
-        url = pages[i]
-'''
-
-url = 'https://vm009.rz.uos.de/crawl/index.html'
-query = 'platypus'
-results = web_search(url, query)
-print(results)
