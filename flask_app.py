@@ -1,6 +1,10 @@
-from flask import Flask, request, render_template_string, escape
+from flask import Flask, request, render_template_string
+from markupsafe import escape
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
+from config import index_dir
+
+
 
 app = Flask(__name__)
 

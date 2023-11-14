@@ -3,12 +3,16 @@ from bs4 import BeautifulSoup
 from whoosh.index import create_in
 from whoosh.fields import Schema, TEXT, ID, STORED
 import os
+from config import index_dir
+
+
 
 # Define the schema for Whoosh
 schema = Schema(url=ID(stored=True, unique=True), title=TEXT(stored=True), content=TEXT, teaser=TEXT(stored=True))
 
-# Create an index directory and index writer
-index_dir = 'indexdir'
+
+
+
 if not os.path.exists(index_dir):
     os.mkdir(index_dir)
 ix = create_in(index_dir, schema)
