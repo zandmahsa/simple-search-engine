@@ -1,9 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
+from whoosh.index import create_in
+from whoosh.fields import Schema, TEXT, ID, STORED
+import os
 
-def crawl(url, base_url, visited, index):
+# Define the schema for Whoosh
+schema = Schema(url=ID(stored=True, unique=True), title=TEXT(stored=True), content=TEXT, teaser=TEXT(stored=True))
+
+# Create an index directory and index writer
+index_dir = 'indexdir'
+if not os.path.exists(index_dir):
+    os.mkdir(index_dir)
+ix = create_in(index_dir, schema)
+writer = ix.writer()
+
+def crawl(url, base_url, visited):
     """
-    Recursively crawls a web page and updates the visited set and index.
+    Recursively crawls a web page and calls index_page for each page.
     """
     if url in visited or not url.startswith(base_url):
         return
@@ -12,44 +25,30 @@ def crawl(url, base_url, visited, index):
         response = requests.get(url)
         visited.add(url)
 
-        # Skip if page not found or not HTML
-        if response.status_code == 404 or 'text/html' not in response.headers.get('Content-Type', ''):
-            return
-
-        soup = BeautifulSoup(response.text, 'html.parser')
-        text = soup.get_text()
-        words = text.split()
-        for word in words:
-            index.setdefault(word, set()).add(url)
-
-        for link in soup.find_all('a', href=True):
-            full_link = base_url + link['href'].lstrip('/')
-            crawl(full_link, base_url, visited, index)
+        if response.status_code == 200 and 'text/html' in response.headers.get('Content-Type', ''):
+            soup = BeautifulSoup(response.text, 'html.parser')
+            index_page(url, soup)
+            
+            for link in soup.find_all('a', href=True):
+                full_link = base_url + link['href'].lstrip('/')
+                crawl(full_link, base_url, visited)
 
     except requests.RequestException:
         pass
 
-def search(query, index):
+def index_page(url, soup):
     """
-    Search for pages containing all words in the query.
+    Indexes a single page's content.
     """
-    words = query.split()
-    if not words:
-        return []
+    title = soup.title.string if soup.title else url  # Using URL as title if <title> tag is missing
+    content = soup.get_text()
+    teaser = content[:200]  # First 200 characters of content as a teaser
+    writer.add_document(url=url, title=title, content=content, teaser=teaser)
 
-    results = index.get(words[0], set())
-    for word in words[1:]:
-        results = results.intersection(index.get(word, set()))
-
-    return list(results)
-
-    
-# Base URL of the site to crawl
+# Start the crawling process
 base_url = 'https://vm009.rz.uos.de/crawl/'
 visited_urls = set()
-index = {}
+crawl(base_url, base_url, visited_urls)
 
-crawl(base_url, base_url, visited_urls, index)
-
-print(search("platypus", index))
-
+# Committing the changes to the index
+writer.commit()
