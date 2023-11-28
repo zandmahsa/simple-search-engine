@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template
 from markupsafe import escape
 from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
@@ -10,12 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template_string("""
-        <form action="/search">
-            <input type="text" name="q" placeholder="Search here...">
-            <input type="submit" value="Search">
-        </form>
-    """)
+    return render_template('WebHTML.html')
 
 @app.route('/search')
 def search():
@@ -33,13 +28,8 @@ def search():
                 'title': result['title'],
                 'teaser': result['teaser']
             })
-
-    return render_template_string("""
-        <h1>Search Results</h1>
-        {% for item in results_list %}
-        <p><a href="{{ item.url }}">{{ item.title }}</a><br>{{ item.teaser }}</p>
-        {% endfor %}
-    """, results_list=results_list)
+    print(results_list)
+    return render_template('ResultHTML.html', results_list=results_list)
 
 if __name__ == '__main__':
     app.run(debug=True)

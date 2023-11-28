@@ -41,12 +41,10 @@ def crawl(url, base_url, visited):
         pass
 
 def index_page(url, soup):
-    """
-    Indexes a single page's content.
-    """
+    
     title = soup.title.string if soup.title else url  # Using URL as title if <title> tag is missing
     content = soup.get_text()
-    teaser = content[:200]  # First 200 characters of content as a teaser
+    teaser = content[:100]  # First 200 characters of content as a teaser
     writer.add_document(url=url, title=title, content=content, teaser=teaser)
 
 # Start the crawling process
