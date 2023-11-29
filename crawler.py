@@ -12,7 +12,6 @@ schema = Schema(url=ID(stored=True, unique=True), title=TEXT(stored=True), conte
 
 
 
-
 if not os.path.exists(index_dir):
     os.mkdir(index_dir)
 ix = create_in(index_dir, schema)
@@ -22,7 +21,7 @@ def crawl(url, base_url, visited):
     """
     Recursively crawls a web page and calls index_page for each page.
     """
-    if url in visited or not url.startswith(base_url):
+    if url in visited or not url.startswith(base_url) or url == base_url + 'index.html':
         return
 
     try:
