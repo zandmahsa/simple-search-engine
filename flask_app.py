@@ -18,7 +18,7 @@ it is a probabilistic approach to ranking documents based on the query terms app
 it is known for its effectiveness in handling various types of datasets and queries.
 '''
 
-from flask import Flask, request, render_template 
+from flask import Flask, request, render_template, url_for 
 from markupsafe import escape
 from whoosh.index import open_dir
 from whoosh.qparser import MultifieldParser, PhrasePlugin
@@ -36,7 +36,7 @@ app = Flask(__name__)
 def home(): 
 
     # Renders the WebHTML.html template after homepage is accessed
-    return render_template('WebHTML.html')  
+    return render_template('WebHTML.html', search_url = url_for('search'))  
 
 
 # Route for the search
@@ -79,6 +79,6 @@ def search():
     # Returning Search Results
     return render_template('ResultHTML.html', results_list=results_list)
 
-if __name__ == '__main__':
-    # Runs the Flask app with debug mode enabled (for  detailed error messages and live reloading)
-    app.run(debug=True)
+#if __name__ == '__main__':
+    #Runs the Flask app with debug mode enabled (for  detailed error messages and live reloading)
+ #    app.run(debug=True)
