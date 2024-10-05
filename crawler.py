@@ -1,20 +1,4 @@
-'''
-Artificial Intelligence and the web course(winter 2023) 
-Mahsa Zand-khaneh shahri and Mitra Farajimashaallah
 
-A web crawler that navigates through web pages starting from the base URL, 
-extracts data from each page, and indexes this data for searching. 
-It uses requests for HTTP requests, BeautifulSoup for HTML parsing, and Whoosh for indexing and search functionality.
-
-libraries: 
-Imports the requests library to make HTTP requests.
-Imports BeautifulSoup from the bs4 library for parsing HTML.
-Imports create_in to create a Whoosh index.
-from whoosh.fields import Schema, TEXT, ID, STORED: Imports necessary components to define a Whoosh schema.
-Imports the os library for interacting with the operating system.
-Imports the path of the index directory from a config.py file.
-
-'''
 import requests
 from bs4 import BeautifulSoup
 from whoosh.index import create_in
@@ -95,7 +79,7 @@ def index_page(url, soup):
     writer.add_document(url=url, title=title, content=content, teaser=teaser)
 
 # Start the crawling
-base_url = 'https://vm009.rz.uos.de/crawl/'
+base_url = 'http://localhost:5000'
 visited_urls = set()
 crawl(base_url, base_url, visited_urls)
 
