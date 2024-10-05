@@ -1,67 +1,60 @@
-# The Simple Search Engine
-
-
-
-## Introduction
-
-Welcome to "The Simple Search Engine" – our first project for the course "Artificial Intelligence and the Web." This project is a demonstration of integrating AI concepts with web technologies to create a basic search engine. Our aim is to provide a simplified but functional example of how search engines operate, leveraging artificial intelligence for data crawling and retrieval.
-
-https://gitlab.gwdg.de/m.zandkhanehshahri/aiweb-project-mm1.git
-
-
+# Simple Search Engine
+Welcome to the Simple Search Engine! This application allows you to crawl and index data, then search through it using a web-based interface powered by Flask.
 
 ## Getting Started
-
-To get started with "The Simple Search Engine," follow the steps outlined below. Make sure you have all the necessary dependencies installed before proceeding.
+To get started with the Simple Search Engine, follow the instructions below. Make sure you have installed all the required dependencies before proceeding.
 
 ### Prerequisites
+Ensure you have the following Python packages installed:
 
-python 
-requests
-beautifulsoup4
-flask
-woosh
+**python**
+**requests**
+**beautifulsoup4**
+**flask**
+**whoosh**
+You can install these dependencies using the following command:
 
-
-## Running the Application
-
-To run the application, follow these steps in the given order:
-
-### 1-Start the Crawler
-
-Run the crawler.py script to crawl and index the data.
-
+```bash
+pip install requests beautifulsoup4 flask whoosh
 ```
+or 
+```bash
+pip install -r requirements.txt
+```
+
+### Running the Application
+Follow these steps to run the application:
+
+1. Start the Crawler
+Run the `crawler.py` script to crawl and index the data:
+
+```bash
 python crawler.py
-
 ```
 
-### 2-Configure the Application:
+2. Configure the Application
+Next, run the `config.py` script to set up the application’s configuration:
 
-Next, run the config.py script to configure the application settings.
-
-```
+```bash
 python config.py
-
 ```
 
-### 3-Launch the Flask Application:
+3. Launch the Flask Application
+Finally, start the Flask server by running the `flask_app.py` script:
 
-Finally, start the Flask application by running flask_app.py.
-
-```
+```bash
 python flask_app.py
-
 ```
+Upon successful execution, the Flask server will start, and the application will be accessible through your web browser, usually at:
+http://localhost:5000
 
+Usage
+Once the application is running, you can use the web interface to perform searches. Simply enter your search query, and the engine will display results based on the data indexed by the crawler.
 
-Upon successful execution, the Flask server will start, and you can access the application through your web browser at the address provided in the console (usually http://localhost:5000).
+Contributing
+We welcome contributions to enhance the project! To contribute:
 
-
-## Usage
-
-After launching the application, use the web interface to submit search queries. The application will display results based on the data indexed by the crawler.
-
-## Contributing
-We welcome contributions and suggestions to improve this project. Please feel free to fork the repository and submit pull requests.
-
+Fork the repository.
+Create a new branch for your feature or bugfix.
+Submit a pull request once your changes are ready.
+Thank you for helping us improve the Simple Search Engine!
