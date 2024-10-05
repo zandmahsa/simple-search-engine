@@ -1,22 +1,3 @@
-'''Artificial Intelligence and the web course(winter 2023) 
-Mahsa Zand and Mitra Faraji
-
-This Python script uses Flask to create a web application that allows users to search through a dataset from 
-the provided website: https://vm009.rz.uos.de/crawl/index.html
-indexed using Whoosh 
-
-libraries: 
-Imports the Flask class to create the app, request to handle requests, and render_template to render HTML templates.
-Imports escape to sanitize user input, preventing security issues like XSS (Cross-Site Scripting).
-Imports open_dir to access the Whoosh index directory.
-Imports MultifieldParser for parsing search queries across multiple fields and PhrasePlugin for phrase searching.
-Imports BM25F, a scoring algorithm used for ranking search results.
-Imports the path of the Whoosh index directory from a separate config.py file.
-
-extra information about using BM25: 
-it is a probabilistic approach to ranking documents based on the query terms appearing in each document. 
-it is known for its effectiveness in handling various types of datasets and queries.
-'''
 
 from flask import Flask, request, render_template, url_for 
 from markupsafe import escape
@@ -79,6 +60,6 @@ def search():
     # Returning Search Results
     return render_template('ResultHTML.html', results_list=results_list)
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
     #Runs the Flask app with debug mode enabled (for  detailed error messages and live reloading)
- #    app.run(debug=True)
+   app.run(debug=True)
