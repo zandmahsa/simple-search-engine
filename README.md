@@ -48,10 +48,10 @@ python flask_app.py
 Upon successful execution, the Flask server will start, and the application will be accessible through your web browser, usually at:
 http://localhost:5000
 
-Usage
+#### Usage
 Once the application is running, you can use the web interface to perform searches. Simply enter your search query, and the engine will display results based on the data indexed by the crawler.
 
-Contributing
+#### Contributing
 We welcome contributions to enhance the project! To contribute:
 
 Fork the repository.
